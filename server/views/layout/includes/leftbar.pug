@@ -1,0 +1,19 @@
+#sidebar-nav.sidebar
+    .sidebar-scroll
+        nav
+            ul.nav
+                li
+                    a(href="/" class=(page == "Home" ? "active" : ""))
+                        i.lnr.lnr-database
+                        span
+                        | View Quotes
+                li
+                    a(href="/quotes/new" class=(page == "New Quote" ? "active" : ""))
+                        i.lnr.lnr-file-add
+                        span
+                        | New Quote
+                li
+                    a(href="/users/registration" class=(page == "Registration" ? "active" : ""))
+                        i.lnr.lnr-users
+                        span
+                        | Register New User

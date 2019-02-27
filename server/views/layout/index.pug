@@ -1,0 +1,53 @@
+doctype html
+html
+  head
+    //Existing Stuff
+    title Labels Plus Quotation | #{page}
+    //link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css', integrity='sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7', crossorigin='anonymous')
+    //link(rel='stylesheet', href='/css/style.css')
+    //meta(name='viewport', content='width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0')
+    //link(href='https://fonts.googleapis.com/css?family=Open+Sans|Roboto+Slab', rel='stylesheet', type='text/css')
+
+    //New Stuff
+    meta(charset="utf-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge,chrome=1")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0")
+
+    link(rel='stylesheet', href='/vendor/bootstrap/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/vendor/font-awesome/css/font-awesome.min.css')
+    link(rel='stylesheet', href='/vendor/linearicons/style.css')
+    link(rel='stylesheet', href='/vendor/chartist/css/chartist-custom.css')
+
+    link(rel='stylesheet', href='/css/main.css')
+
+    link(href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet")
+
+    link(rel="apple-touch-icon" sizes="57x57" href="https://www.labelsplus.co.nz/app/icons/apple-icon-57x57.png")
+    link(rel="apple-touch-icon" sizes="60x60" href="https://www.labelsplus.co.nz/app/icons/apple-icon-60x60.png")
+    link(rel="apple-touch-icon" sizes="72x72" href="https://www.labelsplus.co.nz/app/icons/apple-icon-72x72.png")
+    link(rel="apple-touch-icon" sizes="76x76" href="https://www.labelsplus.co.nz/app/icons/apple-icon-76x76.png")
+    link(rel="apple-touch-icon" sizes="114x114" href="https://www.labelsplus.co.nz/app/icons/apple-icon-114x114.png")
+    link(rel="apple-touch-icon" sizes="120x120" href="https://www.labelsplus.co.nz/app/icons/apple-icon-120x120.png")
+    link(rel="apple-touch-icon" sizes="144x144" href="https://www.labelsplus.co.nz/app/icons/apple-icon-144x144.png")
+    link(rel="apple-touch-icon" sizes="152x152" href="https://www.labelsplus.co.nz/app/icons/apple-icon-152x152.png")
+    link(rel="apple-touch-icon" sizes="180x180" href="https://www.labelsplus.co.nz/app/icons/apple-icon-180x180.png")
+    link(rel="icon" type="image/png" sizes="192x192"  href="https://www.labelsplus.co.nz/app/icons/android-icon-192x192.png")
+    link(rel="icon" type="image/png" sizes="32x32" href="https://www.labelsplus.co.nz/app/icons/favicon-32x32.png")
+    link(rel="icon" type="image/png" sizes="96x96" href="https://www.labelsplus.co.nz/app/icons/favicon-96x96.png")
+    link(rel="icon" type="image/png" sizes="16x16" href="https://www.labelsplus.co.nz/app/icons/favicon-16x16.png")
+
+  body
+    #wrapper
+      include includes/headernew
+      include includes/leftbar
+      .main
+        .main-content
+          .container-fluid
+            block speakerslist
+            block content
+      .clearfix
+      footer
+        .container-fluid
+    include includes/scripts
+    block additionalscripts
+

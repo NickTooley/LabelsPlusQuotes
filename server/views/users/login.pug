@@ -1,0 +1,53 @@
+doctype html
+html.fullscreen-bg
+
+  head
+    title
+      | Labels Plus Quotation | Login
+    meta(charset="utf-8")
+    meta(http-equiv="X-UA-Compatible" content="IE=edge,chrome=1")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0")
+    link(rel='stylesheet' href="/css/bootstrap.min.css")
+    link(rel="stylesheet" href="/vendor/font-awesome/css/font-awesome.min.css")
+    link(rel="stylesheet" href="/vendor/linearicons/style.css")
+    link(rel="stylesheet" href="/css/main.css")
+    link(href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet")
+
+  body
+    #wrapper
+      .vertical-align-wrap
+        .vertical-align-middle
+          .auth-box
+            .left
+              .content
+                .header
+                  .logo.text-center
+                    img(src="/img/LabelsLogo.svg" alt="Klorofil Logo")
+                  p.lead
+                    | Login to your account
+                  if error
+                    .alert.alert-danger(style="height: 34px;padding: 5px;")
+                      | Invalid username or password!
+                form.form-auth-small(method="POST", action="/users/login")
+                  .form-group
+                    label.control-label.sr-only(for="inputEmail") Email
+                    input#inputEmail.form-control(type='email', name='email', placeholder='Enter email', required)
+                  .form-group
+                    label.control-label.sr-only(for='inputPassword') Password
+                    input#inputPassword.form-control(type='password', name='password', placeholder='Password', required, minlength=6)
+                  .form-group.clearfix
+                    label.fancy-checkbox.element-left
+                      input(type="checkbox")
+                      span
+                        | Remember Me
+                  button.btn.btn-primary.btn-lg.btn-block(type='submit') LOGIN
+                  .bottom
+                        
+            .right
+              .overlay
+              .content.text
+                h1.heading
+                  | Labels Plus
+                p
+                  | Quotation System
+            .clearfix

@@ -1,0 +1,24 @@
+nav.navbar.navbar-default.navbar-fixed-top
+    .brand(style="padding: 10px 10px 0px 20px;")
+        a(href="/")
+            img.img-responsive.logo(src="/img/LabelsLogo.svg" height="50px" alt="Labels Plus Logo" style="height: 50px;width: 180px;")
+    .container-fluid
+        .navbar-btn
+            button.btn-toggle-fullwidth(type="button")
+                i.lnr.lnr-arrow-left-circle
+        .navbar-menu
+            ul.nav.navbar-nav.navbar-right
+                li.dropdown
+                    a.dropdown-toggle(href="#" data-toggle="dropdown")
+                        i.lnr.lnr-user(style="padding-right: 10px;")
+                        span(style="padding-right: 10px;")
+                            | #{user.username}
+                        i.icon-submenu.lnr.lnr-chevron-down
+                    ul.dropdown-menu
+                        li
+                            a(href="/users/logout")
+                                i.lnr.lnr-exit
+                                span
+                                    | Logout
+
+

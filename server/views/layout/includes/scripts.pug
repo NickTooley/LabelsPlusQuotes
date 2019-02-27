@@ -1,0 +1,43 @@
+//- script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js')
+//- script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js', integrity='sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS', crossorigin='anonymous')
+//- if artwork
+//-   script(src='/js/pixgrid.js')
+
+script(src="/vendor/jquery/jquery.min.js")
+script(src="/vendor/bootstrap/js/bootstrap.min.js")
+script(src="/vendor/jquery-slimscroll/jquery.slimscroll.min.js")
+script(src="/vendor/jquery.easy-pie-chart/jquery.easypiechart.min.js")
+script(src="/vendor/chartist/js/chartist.min.js")
+script(src="/scripts/klorofil-common.js")
+script.
+  function myFunction() {
+  // Declare variables 
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("userTable");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+    txtValue = td.textContent || td.innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {				
+      if(tr[i].className == "clicker"){
+        tr[i].style.display = "";
+      }
+    } else {
+      if(tr[i].className == "clicker"){
+        tr[i].style.display = "none";
+      }
+    }
+    } 
+  }
+  }
+
+
+script.
+  $('.clicker').click(function(){
+    $(this).nextUntil('.clicker').slideToggle();
+  });
