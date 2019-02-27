@@ -111,6 +111,14 @@ module.exports = (params) => {
             return done(null, false, {message: "Invalid data"});
         }
 
+        const additional1 = "";
+        const additional2 = "";
+        const additional3 = "";
+
+        if(len(savedquote.additionaldetails) > 0 ){
+            
+        }
+
         const pdfDoc = new HummusRecipe('template.pdf', 'output2.pdf');
             pdfDoc
                 // edit 1st page
@@ -168,6 +176,10 @@ module.exports = (params) => {
                     fontSize: 12
                 })
                 .text(savedquote.diesize, 185, 375, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(savedquote.numcolors, 185, 389, {
                     color: '000000',
                     fontSize: 12
                 })
