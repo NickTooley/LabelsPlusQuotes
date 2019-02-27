@@ -111,13 +111,13 @@ module.exports = (params) => {
             return done(null, false, {message: "Invalid data"});
         }
 
-        const additional1 = "";
-        const additional2 = "";
-        const additional3 = "";
+        var additional1 = " ";
+        var additional2 = " ";
+        var additional3 = " ";
 
         const MAX_LENGTH = 50;
 
-        const additionalLength = len(savedquote.additionaldetails);
+        const additionalLength = savedquote.additionaldetails.length;
 
         if(additionalLength > 0 ){
             if(additionalLength > MAX_LENGTH){
@@ -136,12 +136,20 @@ module.exports = (params) => {
 
                     additional1 = savedquote.additionaldetails.slice(0,str1);
                     additional2 = savedquote.additionaldetails.slice(str1,str2);
-                    
+
                 }
             }else{
                 additional1 = savedquote.additionaldetails;
             }
         }
+
+        const quantity2 = (savedquote.quantity2 == "" ? " " : savedquote.quantity2)
+        const price2 = (savedquote.price2 == "" ? " " : savedquote.price2)
+        const total2 = (savedquote.total2 == "" ? " " : savedquote.total2)
+
+        const quantity3 = (savedquote.quantity3 == "" ? " " : savedquote.quantity3)
+        const price3 = (savedquote.price3 == "" ? " " : savedquote.price3)
+        const total3 = (savedquote.total3 == "" ? " " : savedquote.total3)
 
         const pdfDoc = new HummusRecipe('template.pdf', 'output2.pdf');
             pdfDoc
@@ -207,7 +215,59 @@ module.exports = (params) => {
                     color: '000000',
                     fontSize: 12
                 })
-                .text(savedquote.numcolors, 185, 389, {
+                .text(additional1, 185, 420, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(additional2, 185, 434, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(additional3, 185, 448, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(savedquote.oneoffcost, 185, 554, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(savedquote.createdby, 36, 782, {
+                    color: '000000',
+                    fontSize: 11
+                })
+                .text(savedquote.quantity1, 36, 497, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text("$" + savedquote.price1 + " per " + savedquote.presentation, 180, 497, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text("$" + savedquote.total1, 324, 497, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(quantity2, 36, 511, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text("$" + price2 + " per " + savedquote.presentation, 180, 511, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text("$" + total2, 324, 511, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(quantity3, 36, 525, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text("$" + price3 + " per " + savedquote.presentation, 180, 525, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text("$" + total3, 324, 525, {
                     color: '000000',
                     fontSize: 12
                 })
