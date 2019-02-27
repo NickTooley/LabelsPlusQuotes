@@ -115,8 +115,32 @@ module.exports = (params) => {
         const additional2 = "";
         const additional3 = "";
 
-        if(len(savedquote.additionaldetails) > 0 ){
-            
+        const MAX_LENGTH = 50;
+
+        const additionalLength = len(savedquote.additionaldetails);
+
+        if(additionalLength > 0 ){
+            if(additionalLength > MAX_LENGTH){
+                if(additionalLength > MAX_LENGTH * 2){
+                    const str1 = savedquote.additionaldetails.slice(0,MAX_LENGTH).lastIndexOf(" ") + 1;
+                    const str2 = str1 + savedquote.additionaldetails.slice(str1, str1 + MAX_LENGTH).lastIndexOf(" ") + 1;
+                    const str3 = additionalLength;
+
+                    additional1 = savedquote.additionaldetails.slice(0,str1);
+                    additional2 = savedquote.additionaldetails.slice(str1,str2);
+                    additional3 = savedquote.additionaldetails.slice(str2,str3);
+
+                }else{
+                    const str1 = savedquote.additionaldetails.slice(0,MAX_LENGTH).lastIndexOf(" ") + 1;
+                    const str2 = additionalLength;
+
+                    additional1 = savedquote.additionaldetails.slice(0,str1);
+                    additional2 = savedquote.additionaldetails.slice(str1,str2);
+                    
+                }
+            }else{
+                additional1 = savedquote.additionaldetails;
+            }
         }
 
         const pdfDoc = new HummusRecipe('template.pdf', 'output2.pdf');
