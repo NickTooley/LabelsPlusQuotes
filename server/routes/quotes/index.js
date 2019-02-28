@@ -21,6 +21,13 @@ module.exports = (params) => {
         res.render('quotes/newquote', {error: req.query.error, page: "New Quote", customers: customersJSON});
         });
 
+    router.get('/customer/:id', async (req, res, next) => {
+        const customer = await CustomerModel.findById(req.params.id);
+        const allQuotes = await QuoteModel.find({customername: customer.customerName});
+
+        res.render('quotes/customers', {quotes: allQuotes, customer: customer});
+    });
+
     router.get('/generate/:id', async (req, res, next) => {
 
         //res.setHeader('Content-Type', 'application/pdf');
