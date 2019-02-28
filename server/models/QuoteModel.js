@@ -125,7 +125,7 @@ const quoteSchema = mongoose.Schema({
     timestamps: true
 });
 
-quoteSchema.plugin(AutoIncrement, {inc_field: 'quoteNum'});
+quoteSchema.plugin(AutoIncrement, {inc_field: 'quoteNum', startAt: 100000});
 
 
 module.exports = mongoose.model('quote', quoteSchema);

@@ -11,7 +11,192 @@ const router = express.Router();
 module.exports = (params) => {
     const { } = params; 
 
-    router.get('/new', (req,res) => res.render('quotes/newquote', {error: req.query.error, page: "New Quote"}));
+    router.get('/new', async (req,res) => {
+        const customers = await CustomerModel.find();
+        const toPass = [];
+        customers.forEach(element => {
+            toPass.push({"label":element.customerName, "addr1":element.addressLine1, "addr2":element.addressLine2, "addr3":element.addressLine3});
+        });
+        const customersJSON = JSON.stringify(toPass);
+        res.render('quotes/newquote', {error: req.query.error, page: "New Quote", customers: customersJSON});
+        });
+
+    router.get('/generate/:id', async (req, res, next) => {
+
+        //res.setHeader('Content-Type', 'application/pdf');
+
+        const savedquote = await QuoteModel.findOne({quoteNum: req.params.id})
+
+        if(!savedquote) return next();
+
+        var additional1 = " ";
+        var additional2 = " ";
+        var additional3 = " ";
+
+        const MAX_LENGTH = 50;
+
+        const additionalLength = savedquote.additionaldetails.length;
+
+        if(additionalLength > 0 ){
+            if(additionalLength > MAX_LENGTH){
+                if(additionalLength > MAX_LENGTH * 2){
+                    const str1 = savedquote.additionaldetails.slice(0,MAX_LENGTH).lastIndexOf(" ") + 1;
+                    const str2 = str1 + savedquote.additionaldetails.slice(str1, str1 + MAX_LENGTH).lastIndexOf(" ") + 1;
+                    const str3 = additionalLength;
+
+                    additional1 = savedquote.additionaldetails.slice(0,str1);
+                    additional2 = savedquote.additionaldetails.slice(str1,str2);
+                    additional3 = savedquote.additionaldetails.slice(str2,str3);
+
+                }else{
+                    const str1 = savedquote.additionaldetails.slice(0,MAX_LENGTH).lastIndexOf(" ") + 1;
+                    const str2 = additionalLength;
+
+                    additional1 = savedquote.additionaldetails.slice(0,str1);
+                    additional2 = savedquote.additionaldetails.slice(str1,str2);
+
+                }
+            }else{
+                additional1 = savedquote.additionaldetails;
+            }
+        }
+
+        const quantity2 = (savedquote.quantity2 == "" ? " " : savedquote.quantity2)
+        const price2 = (savedquote.price2 == "" ? " " : savedquote.price2)
+        const total2 = (savedquote.total2 == "" ? " " : savedquote.total2)
+
+        const quantity3 = (savedquote.quantity3 == "" ? " " : savedquote.quantity3)
+        const price3 = (savedquote.price3 == "" ? " " : savedquote.price3)
+        const total3 = (savedquote.total3 == "" ? " " : savedquote.total3)
+
+
+        const pdfDoc = new HummusRecipe('template.pdf', 'output.pdf');
+            pdfDoc
+                // edit 1st page
+                .editPage(1)
+                .text(savedquote.customername, 36, 154, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(savedquote.addressLine1, 36, 170, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(savedquote.addressLine2, 36, 186, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(savedquote.addressLine3, 36, 202, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(savedquote.attention, 64, 234, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(savedquote.date.toLocaleDateString('en-NZ'), 430, 154, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(savedquote.quoteNum, 430, 169.6, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(savedquote.title, 185, 276, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(savedquote.stock, 185, 290, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(savedquote.adhesive, 185, 319, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(savedquote.backing, 185, 333, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(savedquote.presentation + ' per Roll', 185, 347, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(savedquote.coresize + 'mm', 185, 361, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(savedquote.diesize, 185, 375, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(savedquote.numcolors, 185, 389, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(additional1, 185, 420, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(additional2, 185, 434, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(additional3, 185, 448, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(savedquote.oneoffcost, 185, 554, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(savedquote.createdby, 36, 782, {
+                    color: '000000',
+                    fontSize: 11
+                })
+                .text(savedquote.quantity1, 36, 497, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text("$" + savedquote.price1 + " per " + savedquote.presentation, 180, 497, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text("$" + savedquote.total1, 324, 497, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(quantity2, 36, 511, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text("$" + price2 + " per " + savedquote.presentation, 180, 511, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text("$" + total2, 324, 511, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text(quantity3, 36, 525, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text("$" + price3 + " per " + savedquote.presentation, 180, 525, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .text("$" + total3, 324, 525, {
+                    color: '000000',
+                    fontSize: 12
+                })
+                .endPage()
+                .endPDF(()=>{ res.download('output.pdf', 'Labels Plus Quote #' + savedquote.quoteNum + '.pdf');
+            });
+
+
+
+    })
 
     router.post('/new', async (req, res, next) => {
 
@@ -111,169 +296,9 @@ module.exports = (params) => {
             return done(null, false, {message: "Invalid data"});
         }
 
-        var additional1 = " ";
-        var additional2 = " ";
-        var additional3 = " ";
+        res.redirect('/quotes/generate/'+savedquote.quoteNum);
 
-        const MAX_LENGTH = 50;
-
-        const additionalLength = savedquote.additionaldetails.length;
-
-        if(additionalLength > 0 ){
-            if(additionalLength > MAX_LENGTH){
-                if(additionalLength > MAX_LENGTH * 2){
-                    const str1 = savedquote.additionaldetails.slice(0,MAX_LENGTH).lastIndexOf(" ") + 1;
-                    const str2 = str1 + savedquote.additionaldetails.slice(str1, str1 + MAX_LENGTH).lastIndexOf(" ") + 1;
-                    const str3 = additionalLength;
-
-                    additional1 = savedquote.additionaldetails.slice(0,str1);
-                    additional2 = savedquote.additionaldetails.slice(str1,str2);
-                    additional3 = savedquote.additionaldetails.slice(str2,str3);
-
-                }else{
-                    const str1 = savedquote.additionaldetails.slice(0,MAX_LENGTH).lastIndexOf(" ") + 1;
-                    const str2 = additionalLength;
-
-                    additional1 = savedquote.additionaldetails.slice(0,str1);
-                    additional2 = savedquote.additionaldetails.slice(str1,str2);
-
-                }
-            }else{
-                additional1 = savedquote.additionaldetails;
-            }
-        }
-
-        const quantity2 = (savedquote.quantity2 == "" ? " " : savedquote.quantity2)
-        const price2 = (savedquote.price2 == "" ? " " : savedquote.price2)
-        const total2 = (savedquote.total2 == "" ? " " : savedquote.total2)
-
-        const quantity3 = (savedquote.quantity3 == "" ? " " : savedquote.quantity3)
-        const price3 = (savedquote.price3 == "" ? " " : savedquote.price3)
-        const total3 = (savedquote.total3 == "" ? " " : savedquote.total3)
-
-        const pdfDoc = new HummusRecipe('template.pdf', 'output2.pdf');
-            pdfDoc
-                // edit 1st page
-                .editPage(1)
-                .text(savedquote.customername, 36, 154, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.addressLine1, 36, 170, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.addressLine2, 36, 186, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.addressLine3, 36, 202, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.attention, 64, 234, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.date.toLocaleDateString('en-NZ'), 430, 154, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.quoteNum + 100000, 430, 169.6, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.title, 185, 276, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.stock, 185, 290, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.adhesive, 185, 319, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.backing, 185, 333, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.presentation + ' per Roll', 185, 347, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.coresize + 'mm', 185, 361, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.diesize, 185, 375, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.numcolors, 185, 389, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(additional1, 185, 420, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(additional2, 185, 434, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(additional3, 185, 448, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.oneoffcost, 185, 554, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.createdby, 36, 782, {
-                    color: '000000',
-                    fontSize: 11
-                })
-                .text(savedquote.quantity1, 36, 497, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text("$" + savedquote.price1 + " per " + savedquote.presentation, 180, 497, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text("$" + savedquote.total1, 324, 497, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(quantity2, 36, 511, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text("$" + price2 + " per " + savedquote.presentation, 180, 511, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text("$" + total2, 324, 511, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(quantity3, 36, 525, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text("$" + price3 + " per " + savedquote.presentation, 180, 525, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text("$" + total3, 324, 525, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .endPage()
-                .endPDF(()=>{ res.redirect('/') });
-
+        
     }catch(err){
         return next(err);
 

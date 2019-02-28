@@ -10,18 +10,18 @@ block content
            | Successful Quote!   
         .panel.panel-default
           .panel-body
-            form(method="POST", action="/quotes/new")
+            form(method="POST", autocomplete="off", action="/quotes/new", target="_blank")
+              input(autocomplete="false" name="hidden" type="text" style="display:none;")
               .form-group
                 label(for='inputCustomer') Customer
                 input#inputCustomer.form-control(type='text', name='customername', aria-describedby='customerHelp', placeholder='Enter customer', required, minlength=2)
-                small#customerHelp.form-text.text-muted Enter the customer name.
 
               .form-group
                 label(for='inputAddr1') Address
                 input#inputAddr1.form-control(type='text', maxlength="50", name='addressLine1', aria-describedby='addrHelp', placeholder='Enter Address Line 1')
                 input#inputAddr2.form-control(type='text', maxlength="50", name='addressLine2', aria-describedby='addrHelp', placeholder='Enter Address Line 2')
                 input#inputAddr3.form-control(type='text', maxlength="50", name='addressLine3', aria-describedby='addrHelp', placeholder='Enter Address Line 3')
-                input#inputAddr3.form-control(type='text', maxlength="50", name='attention', aria-describedby='addrHelp', placeholder='Attn: ******')
+                input#Attention.form-control(type='text', maxlength="50", name='attention', aria-describedby='addrHelp', placeholder='Attn: ******')
 
               .form-group
                 label(for='inputTitle') Quote Title
@@ -100,3 +100,36 @@ block content
                 textarea.form-control(name="additionaldetails" , rows="4", cols="50" maxlength="150")
 
               button.btn.btn-primary(type='submit') Submit
+
+block additionalscripts
+  script.
+    var mySource = !{customers};
+
+    $("#inputCustomer").autocomplete({
+      source: mySource,
+      select: function(event, ui){
+        if(ui.item){
+          $("#inputAddr1").val(ui.item.addr1);
+          $("#inputAddr2").val(ui.item.addr2);
+          $("#inputAddr3").val(ui.item.addr3);
+          return ui.item.label;
+        }
+        else{
+          $("#inputAddr1").val("");
+          $("#inputAddr2").val("");
+          $("#inputAddr3").val("");
+        }
+      },
+      change: function(event, ui){
+        if(ui.item){
+          $("#inputAddr1").val(ui.item.addr1);
+          $("#inputAddr2").val(ui.item.addr2);
+          $("#inputAddr3").val(ui.item.addr3);
+        }
+        else{
+          $("#inputAddr1").val("");
+          $("#inputAddr2").val("");
+          $("#inputAddr3").val("");
+        }
+      }
+    });
