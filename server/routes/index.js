@@ -1,4 +1,5 @@
 const express = require('express');
+const CustomerModel = require('../models/CustomerModel');
 const passport = require('passport');
 
 const router = express.Router();
@@ -20,9 +21,8 @@ module.exports = (params) => {
 
   // Now let's define the index route and mount it on slash.
   router.get('/', redirectIfLoggedIn, async (req, res) => {
-    const speakerslist = await speakers.getListShort();
-    const artwork = await speakers.getAllArtwork();
-    return res.render('index', { page: 'Home', speakerslist, artwork });
+    const customers = await CustomerModel.find();
+    return res.render('index', { page: 'Home', customers });
   });
 
   // And mount it to the path speakers.

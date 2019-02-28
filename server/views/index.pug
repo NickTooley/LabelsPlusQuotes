@@ -30,13 +30,10 @@ block content
                 tr.clickable-row:hover{
                   background-color:#f0f0f0 !important;
                 }
-              //TODO: List All Customers
-              tr.clickable-row(data-href="/users/registration")
-                td
-                  | Customer Name
-              tr.clickable-row(data-href="/")
-                td
-                  | Second Name
+              each customer in customers
+                tr.clickable-row(data-href=`/quotes/customer/${customer._id}`)
+                  td
+                    | #{customer.customerName}
         .panel-footer
           .row
 
