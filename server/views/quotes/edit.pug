@@ -7,10 +7,10 @@ block content
         h1 Editing Quote #{quote.quoteNum}
         if success
          .alert.alert-success
-           | Successful Quote!   
+           | Successfully Updated!   
         .panel.panel-default
           .panel-body
-            form(method="POST", autocomplete="off", action="/quotes/edit", target="_blank")
+            form(method="POST", autocomplete="off", action=`/quotes/edit/${quote.quoteNum}`, target="_blank")
               input(autocomplete="false" name="hidden" value=`${quote.quoteNum}` type="text" style="display:none;")
               .form-group
                 label(for='inputCustomer') Customer

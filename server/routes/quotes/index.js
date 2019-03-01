@@ -213,6 +213,111 @@ module.exports = (params) => {
 
     })
 
+    router.post('/edit/:id', async (req, res, next) => {
+        console.log("Hello");
+        //Customer Entry
+        try{
+            const customer = await CustomerModel.findOne({customerName: req.body.customername}).exec();
+
+            if(!customer){
+                const newcustomer = new CustomerModel({
+                    customerName: req.body.customername,
+                    addressLine1: req.body.addressLine1,
+                    addressLine2: req.body.addressLine2,
+                    addressLine3: req.body.addressLine3,
+                });
+
+                const savedCustomer = await newcustomer.save();
+            }
+
+        //Stock Entry
+
+            const stock = await StockModel.findOne({stockname: req.body.stock}).exec();
+
+            if(!stock){
+
+                    const newstock = new StockModel({
+                        stockname: req.body.stock,
+                    });
+    
+                    const savedStock = await newstock.save();
+
+            }
+
+        
+
+        //Adhesive Entry
+
+            const adhesive = await AdhesiveModel.findOne({adhesivename: req.body.adhesive}).exec();
+
+            if(!adhesive){
+
+                    const newadhesive = new AdhesiveModel({
+                        adhesivename: req.body.adhesive,
+                    });
+    
+                    const savedAdhesive = await newadhesive.save();
+
+            }
+
+        
+
+        //Backing Entry
+            const backing = await BackingModel.findOne({backingname: req.body.backing}).exec();
+
+            if(!backing){
+                    const newbacking = new BackingModel({
+                        backingname: req.body.backing,
+                    });
+    
+                    const savedBacking = await newbacking.save();
+
+            }
+
+
+        const quote = await QuoteModel.findOne({quoteNum: req.params.id});
+        
+        quote.customername = req.body.customername;
+        quote.addressLine1 = req.body.addressLine1;
+        quote.addressLine2 = req.body.addressLine2;
+        quote.addressLine3 = req.body.addressLine3;
+        quote.attention = req.body.attention;
+        quote.title = req.body.title;
+        quote.stock = req.body.stock;
+        quote.adhesive = req.body.adhesive;
+        quote.backing = req.body.backing;
+        quote.presentation = req.body.presentation;
+        quote.coresize = req.body.coresize;
+        quote.diesize = req.body.diesize;
+        quote.numcolors = req.body.numcolors;
+        quote.additionaldetails = req.body.additionaldetails;
+        quote.quantity1 = req.body.quantity1;
+        quote.quantity2 = req.body.quantity2;
+        quote.quantity3 = req.body.quantity3;
+        quote.price1 = req.body.price1;
+        quote.price2 = req.body.price2;
+        quote.price3 = req.body.price3;
+        quote.total1 = req.body.total1;
+        quote.total2 = req.body.total2;
+        quote.total3 = req.body.total3;
+        quote.oneoffcost = req.body.oneoffcost;
+        quote.createdby = req.user.username;
+
+        const savedquote = await quote.save();
+        if(!savedquote){
+            return done(null, false, {message: "Invalid data"});
+        }
+        res.redirect('/quotes/generate/'+savedquote.quoteNum);
+
+        
+        }catch(err){
+            return next(err);
+            //return res.render('/');
+
+
+        }
+    });
+
     router.post('/new', async (req, res, next) => {
 
         //Customer Entry
