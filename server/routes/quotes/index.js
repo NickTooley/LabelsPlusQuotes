@@ -28,6 +28,14 @@ module.exports = (params) => {
         res.render('quotes/customers', {quotes: allQuotes, customer: customer});
     });
 
+    router.get('/edit/:id', async (req, res, next) => {
+        const quote = await QuoteModel.findOne({quoteNum: req.params.id});
+
+        if(!quote) return next();
+
+        res.render('quotes/edit', {quote:quote});
+    })
+
     router.get('/generate/:id', async (req, res, next) => {
 
         //res.setHeader('Content-Type', 'application/pdf');

@@ -37,7 +37,7 @@ block content
                   background-color:#f0f0f0 !important;
                 }
               each quote in quotes
-                tr.clickable-row(data-href=`/quotes/generate/${quote.quoteNum}`)
+                tr.clickable-row(data-href=`/quotes/edit/${quote.quoteNum}`)
                   td
                     | #{quote.quoteNum}
                   td

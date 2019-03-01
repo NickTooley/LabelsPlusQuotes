@@ -121,6 +121,11 @@ const quoteSchema = mongoose.Schema({
         trim: true,
         required: true,
     },
+    status: { 
+        type: String,
+        required: true,
+        default: "Pending",
+    },
 }, {
     timestamps: true
 });
