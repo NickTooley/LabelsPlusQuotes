@@ -9,11 +9,11 @@ var schedule = require('node-schedule');
 var j = schedule.scheduleJob('*/1 * * * *', async function(){//run every hour when minute = 1
     var dt = new Date();
     dt.setDate( dt.getDate() );
-    // const quotes = await QuoteModel.find({date: {$lt, dt} ,status: 'Pending'});
-
-    // quotes.forEach(element => {
-    //   console.log(element.quoteNum);
-    // });
+    const quotes = await QuoteModel.find({date: {$lt: dt} ,status: 'Pending'});
+    console.log("Next Cycle");
+    quotes.forEach(element => {
+      console.log(element.quoteNum);
+    });
     
 });
 
