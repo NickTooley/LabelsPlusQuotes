@@ -5,11 +5,17 @@ block content
     .row
       .col-sm-10
         .row
-            .col-sm-10
+            .col-sm-7
                 h1 Editing Quote #{quote.quoteNum} 
             .col-sm-2
                 a.btn.btn-primary(href=`/quotes/generate/${quote.quoteNum}`, role="button" style="margin-top:20px;")
                     | Download PDF
+            .col-sm-1(style=" margin-right:10px;")
+                a.btn.btn-success(href='#', role="button", style="margin-top:20px;")
+                    | Accept
+            .col-sm-1
+                a.btn.btn-danger(href='#', role="button", style="margin-top:20px;")
+                    | Reject
         if success
          .alert.alert-success
            | Successfully Updated!   
