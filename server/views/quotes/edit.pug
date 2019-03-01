@@ -4,7 +4,9 @@ block content
   .container#registration
     .row
       .col-sm-10
-        h1 Editing Quote #{quote.quoteNum}
+        h1 Editing Quote #{quote.quoteNum} 
+            a.btn.btn-primary(href=`/quotes/generate/${quote.quoteNum}`, role="button")
+                | Download PDF
         if success
          .alert.alert-success
            | Successfully Updated!   
