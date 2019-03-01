@@ -1,8 +1,21 @@
 const express = require('express');
 const CustomerModel = require('../models/CustomerModel');
 const passport = require('passport');
+const QuoteModel = require('../models/QuoteModel');
 
 const router = express.Router();
+
+var schedule = require('node-schedule');
+var j = schedule.scheduleJob('*/1 * * * *', async function(){//run every hour when minute = 1
+    var dt = new Date();
+    dt.setDate( dt.getDate() );
+    // const quotes = await QuoteModel.find({date: {$lt, dt} ,status: 'Pending'});
+
+    // quotes.forEach(element => {
+    //   console.log(element.quoteNum);
+    // });
+    
+});
 
 // Require the index file
 const speakersRoute = require('./speakers');

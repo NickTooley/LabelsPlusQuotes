@@ -37,6 +37,7 @@ module.exports = (params) => {
     })
 
     router.get('/generate/:id', async (req, res, next) => {
+        try{
 
         //res.setHeader('Content-Type', 'application/pdf');
 
@@ -76,76 +77,15 @@ module.exports = (params) => {
             }
         }
 
-        const quantity2 = (savedquote.quantity2 == "" ? " " : savedquote.quantity2)
-        const price2 = (savedquote.price2 == "" ? " " : savedquote.price2)
-        const total2 = (savedquote.total2 == "" ? " " : savedquote.total2)
-
-        const quantity3 = (savedquote.quantity3 == "" ? " " : savedquote.quantity3)
-        const price3 = (savedquote.price3 == "" ? " " : savedquote.price3)
-        const total3 = (savedquote.total3 == "" ? " " : savedquote.total3)
-
-
         const pdfDoc = new HummusRecipe('template.pdf', 'output.pdf');
             pdfDoc
                 // edit 1st page
                 .editPage(1)
-                .text(savedquote.customername, 36, 154, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.addressLine1, 36, 170, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.addressLine2, 36, 186, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.addressLine3, 36, 202, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.attention, 64, 234, {
-                    color: '000000',
-                    fontSize: 12
-                })
                 .text(savedquote.date.toLocaleDateString('en-NZ'), 430, 154, {
                     color: '000000',
                     fontSize: 12
                 })
                 .text(savedquote.quoteNum, 430, 169.6, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.title, 185, 276, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.stock, 185, 290, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.adhesive, 185, 319, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.backing, 185, 333, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.presentation + ' per Roll', 185, 347, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.coresize + 'mm', 185, 361, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.diesize, 185, 375, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(savedquote.numcolors, 185, 389, {
                     color: '000000',
                     fontSize: 12
                 })
@@ -161,57 +101,185 @@ module.exports = (params) => {
                     color: '000000',
                     fontSize: 12
                 })
-                .text(savedquote.oneoffcost, 185, 554, {
-                    color: '000000',
-                    fontSize: 12
-                })
                 .text(savedquote.createdby, 36, 782, {
                     color: '000000',
                     fontSize: 11
-                })
-                .text(savedquote.quantity1, 36, 497, {
+                });
+
+                if(savedquote.customername != ""){
+                    pdfDoc.text(savedquote.customername, 36, 154, {
                     color: '000000',
                     fontSize: 12
-                })
-                .text("$" + savedquote.price1 + " per " + savedquote.presentation, 180, 497, {
+                    });
+                }
+
+                if(savedquote.attention != ""){
+                    pdfDoc.text(savedquote.attention, 64, 234, {
                     color: '000000',
                     fontSize: 12
-                })
-                .text("$" + savedquote.total1, 324, 497, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(quantity2, 36, 511, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text("$" + price2 + " per " + savedquote.presentation, 180, 511, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text("$" + total2, 324, 511, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text(quantity3, 36, 525, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text("$" + price3 + " per " + savedquote.presentation, 180, 525, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .text("$" + total3, 324, 525, {
-                    color: '000000',
-                    fontSize: 12
-                })
-                .endPage()
-                .endPDF(()=>{ res.download('output.pdf', 'Labels Plus Quote #' + savedquote.quoteNum + '.pdf');
+                    });
+                
+                }
+
+                if(savedquote.addressLine1 != ""){
+                    pdfDoc.text(savedquote.addressLine1, 36, 202, {
+                        color: '000000',
+                        fontSize: 12
+                    });
+                }
+
+                if(savedquote.addressLine2 != ""){
+                    pdfDoc.text(savedquote.addressLine2, 36, 202, {
+                        color: '000000',
+                        fontSize: 12
+                    });
+                }
+
+                if(savedquote.addressLine3 != ""){
+                    pdfDoc.text(savedquote.addressLine3, 36, 202, {
+                        color: '000000',
+                        fontSize: 12
+                    });
+                }
+
+                if(savedquote.title != ""){
+                    pdfDoc.text(savedquote.title, 185, 276, {
+                        color: '000000',
+                        fontSize: 12
+                    });
+                }
+
+                if(savedquote.stock != ""){
+                    pdfDoc.text(savedquote.stock, 185, 290, {
+                        color: '000000',
+                        fontSize: 12
+                    });
+                }
+
+                if(savedquote.adhesive != ""){
+                    pdfDoc.text(savedquote.adhesive, 185, 319, {
+                        color: '000000',
+                        fontSize: 12
+                    });
+                }
+
+                if(savedquote.backing != ""){
+                    pdfDoc.text(savedquote.backing, 185, 333, {
+                        color: '000000',
+                        fontSize: 12
+                    });
+                }
+
+                if(savedquote.presentation != ""){
+                    pdfDoc.text(savedquote.presentation + ' per Roll', 185, 347, {
+                        color: '000000',
+                        fontSize: 12
+                    });
+                }
+
+                if(savedquote.coresize != ""){
+                    pdfDoc.text(savedquote.coresize + 'mm', 185, 361, {
+                        color: '000000',
+                        fontSize: 12
+                    });
+                }
+
+                if(savedquote.diesize != ""){
+                    pdfDoc.text(savedquote.diesize, 185, 375, {
+                        color: '000000',
+                        fontSize: 12
+                    });
+                }
+
+                if(savedquote.numcolors != ""){
+                    pdfDoc.text(savedquote.numcolors, 185, 389, {
+                        color: '000000',
+                        fontSize: 12
+                    });
+                }
+
+                if(savedquote.oneoffcost != ""){
+                    pdfDoc.text(savedquote.oneoffcost, 185, 554, {
+                        color: '000000',
+                        fontSize: 12
+                    });
+                }
+
+                if(savedquote.quantity1 != " "){
+                    pdfDoc.text("$" + savedquote.quantity1, 324, 525, {
+                        color: '000000',
+                        fontSize: 12
+                    })
+                }
+
+                if(savedquote.quantity2 != " "){
+                    pdfDoc.text("$" + savedquote.quantity2, 324, 525, {
+                        color: '000000',
+                        fontSize: 12
+                    })
+                }
+
+                if(savedquote.quantity3 != " "){
+                    pdfDoc.text("$" + savedquote.quantity3, 324, 525, {
+                        color: '000000',
+                        fontSize: 12
+                    })
+                }
+
+                if(savedquote.price1 != " "){
+                    pdfDoc.text("$" + savedquote.price1, 324, 525, {
+                        color: '000000',
+                        fontSize: 12
+                    })
+                }
+
+                if(savedquote.price2 != " "){
+                    pdfDoc.text("$" + savedquote.price2, 324, 525, {
+                        color: '000000',
+                        fontSize: 12
+                    })
+                }
+
+                if(savedquote.price3 != " "){
+                    pdfDoc.text("$" + savedquote.price3, 324, 525, {
+                        color: '000000',
+                        fontSize: 12
+                    })
+                }
+
+                if(savedquote.total1 != " "){
+                    pdfDoc.text("$" + savedquote.total1, 324, 525, {
+                        color: '000000',
+                        fontSize: 12
+                    })
+                }
+
+                if(savedquote.total2 != " "){
+                    pdfDoc.text("$" + savedquote.total2, 324, 525, {
+                        color: '000000',
+                        fontSize: 12
+                    })
+                }
+
+                if(savedquote.total3 != " "){
+                    pdfDoc.text("$" + savedquote.total3, 324, 525, {
+                        color: '000000',
+                        fontSize: 12
+                    })
+                }
+
+                pdfDoc
+                    .endPage()
+                    .endPDF(()=>{ res.download('output.pdf', 'Labels Plus Quote #' + savedquote.quoteNum + '.pdf');
             });
 
+        }catch(err){
+            return next(err);
+        }
 
 
-    })
+
+    });
 
     router.post('/edit/:id', async (req, res, next) => {
         console.log("Hello");
@@ -312,8 +380,6 @@ module.exports = (params) => {
         
         }catch(err){
             return next(err);
-            //return res.render('/');
-
 
         }
     });
@@ -419,10 +485,10 @@ module.exports = (params) => {
         res.redirect('/quotes/generate/'+savedquote.quoteNum);
 
         
-    }catch(err){
-        return next(err);
+        }catch(err){
+            return next(err);
 
-    }
+        }
 
     });
 
