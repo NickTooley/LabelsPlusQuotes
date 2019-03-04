@@ -205,63 +205,63 @@ module.exports = (params) => {
                     });
                 }
 
-                if(savedquote.quantity1 != " "){
-                    pdfDoc.text("$" + savedquote.quantity1, 36, 497, {
+                if(savedquote.quantity1 != ""){
+                    pdfDoc.text(savedquote.quantity1, 36, 497, {
                         color: '000000',
                         fontSize: 12
                     })
                 }
 
-                if(savedquote.quantity2 != " "){
-                    pdfDoc.text("$" + savedquote.quantity2, 36, 511, {
+                if(savedquote.quantity2 != ""){
+                    pdfDoc.text(savedquote.quantity2, 36, 511, {
                         color: '000000',
                         fontSize: 12
                     })
                 }
 
-                if(savedquote.quantity3 != " "){
-                    pdfDoc.text("$" + savedquote.quantity3, 36, 525, {
+                if(savedquote.quantity3 != ""){
+                    pdfDoc.text(savedquote.quantity3, 36, 525, {
                         color: '000000',
                         fontSize: 12
                     })
                 }
 
-                if(savedquote.price1 != " "){
+                if(savedquote.price1 != ""){
                     pdfDoc.text("$" + savedquote.price1 + " per " + savedquote.presentation, 180, 497, {
                         color: '000000',
                         fontSize: 12
                     })
                 }
 
-                if(savedquote.price2 != " "){
+                if(savedquote.price2 != ""){
                     pdfDoc.text("$" + savedquote.price2 + " per " + savedquote.presentation, 180, 511, {
                         color: '000000',
                         fontSize: 12
                     })
                 }
 
-                if(savedquote.price3 != " "){
+                if(savedquote.price3 != ""){
                     pdfDoc.text("$" + savedquote.price3 + " per " + savedquote.presentation, 180, 525, {
                         color: '000000',
                         fontSize: 12
                     })
                 }
 
-                if(savedquote.total1 != " "){
+                if(savedquote.total1 != ""){
                     pdfDoc.text("$" + savedquote.total1, 324, 497, {
                         color: '000000',
                         fontSize: 12
                     })
                 }
 
-                if(savedquote.total2 != " "){
+                if(savedquote.total2 != ""){
                     pdfDoc.text("$" + savedquote.total2, 324, 511, {
                         color: '000000',
                         fontSize: 12
                     })
                 }
 
-                if(savedquote.total3 != " "){
+                if(savedquote.total3 != ""){
                     pdfDoc.text("$" + savedquote.total3, 324, 525, {
                         color: '000000',
                         fontSize: 12
