@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const AutoIncrement = require('mongoose-sequence')(mongoose);
+const moment = require('moment-timezone');
 
 const quoteSchema = mongoose.Schema({
     customername: {
@@ -30,7 +31,7 @@ const quoteSchema = mongoose.Schema({
     },
     date: {
         type: Date,
-        default: Date.now,
+        default: moment().tz("Pacific/Auckland").format(),
         required: true,
     },
     title: {
