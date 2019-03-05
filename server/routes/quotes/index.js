@@ -227,21 +227,21 @@ module.exports = (params) => {
                 }
 
                 if(savedquote.price1 != ""){
-                    pdfDoc.text("$" + savedquote.price1 + " per " + savedquote.presentation, 180, 497, {
+                    pdfDoc.text("$" + savedquote.price1, 180, 497, {
                         color: '000000',
                         fontSize: 12
                     })
                 }
 
                 if(savedquote.price2 != ""){
-                    pdfDoc.text("$" + savedquote.price2 + " per " + savedquote.presentation, 180, 511, {
+                    pdfDoc.text("$" + savedquote.price2, 180, 511, {
                         color: '000000',
                         fontSize: 12
                     })
                 }
 
                 if(savedquote.price3 != ""){
-                    pdfDoc.text("$" + savedquote.price3 + " per " + savedquote.presentation, 180, 525, {
+                    pdfDoc.text("$" + savedquote.price3, 180, 525, {
                         color: '000000',
                         fontSize: 12
                     })
