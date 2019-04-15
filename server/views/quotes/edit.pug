@@ -5,40 +5,34 @@ block content
     .row
       .col-sm-10
         .row
-            if quote.status == "Pending" 
-                .col-sm-8(style=" margin-right:-35px;")
-                    h1 Editing Quote #{quote.quoteNum}
-                    if quote.status == "Pending"
-                      .label.label-warning(id=quote.quoteNum + "label" style="font-size:12px; vertical-align: middle;")
-                        | Pending
-                    if quote.status == "Approved"
-                      .label.label-success(id=quote.quoteNum + "label" style="font-size:12px; vertical-align: middle;")
-                        | Approved
-                    if quote.status == "Rejected"
-                      .label.label-danger(id=quote.quoteNum + "label" style="font-size:12px; vertical-align: middle;")
-                        | Rejected
-                
-                .col-sm-1(style=" margin-right:10px;")
-                  if quote.status == "Approved"
-                    a.btn.btn-success(href='#', role="button", style="margin-top:20px;" disabled)
-                        | Accept
-                  else
-                    a.btn.btn-success(href='#', role="button", style="margin-top:20px;" onclick="approveAJAX("+quote.quoteNum +")")
-                        | Accept
-                .col-sm-1
-                  if quote.status == "Rejected"
-                    a.btn.btn-danger(href='#', role="button", style="margin-top:20px;" disabled)
-                        | Reject
-                  else
-                    a.btn.btn-danger(href='#', role="button", style="margin-top:20px;" onclick="rejectAJAX("+ quote.quoteNum +")")
-                        | Reject
+          .col-sm-8(style=" margin-right:-35px;")
+              h1 Editing Quote #{quote.quoteNum} &nbsp;
+                if quote.status == "Pending"
+                  .label.label-warning(id=quote.quoteNum + "label" style="font-size:12px; vertical-align: middle;")
+                    | Pending
+                if quote.status == "Approved"
+                  .label.label-success(id=quote.quoteNum + "label" style="font-size:12px; vertical-align: middle;")
+                    | Approved
+                if quote.status == "Rejected"
+                  .label.label-danger(id=quote.quoteNum + "label" style="font-size:12px; vertical-align: middle;")
+                    | Rejected
+          .col-sm-2(style=" margin-right:-10px;")
+              a.btn.btn-primary(href=`/quotes/generate/${quote.quoteNum}`, role="button" style="margin-top:20px;")
+                  | Download PDF
+          .col-sm-1(style=" margin-right:10px;")
+            if quote.status == "Approved"
+              a.btn.btn-success(href='#', role="button", style="margin-top:20px;" disabled)
+                  | Accept
             else
-                .col-sm-10
-                    h1 Editing Quote #{quote.quoteNum}
-                
-                .col-sm-2
-                    a.btn.btn-primary(href=`/quotes/generate/${quote.quoteNum}`, role="button" style="margin-top:20px;")
-                        | Download PDF
+               a.btn.btn-success(href='#', role="button", style="margin-top:20px;" onclick="approveAJAX("+quote.quoteNum +")")
+                  | Accept
+          .col-sm-1
+            if quote.status == "Rejected"
+              a.btn.btn-danger(href='#', role="button", style="margin-top:20px;" disabled)
+                  | Reject
+            else
+              a.btn.btn-danger(href='#', role="button", style="margin-top:20px;" onclick="rejectAJAX("+ quote.quoteNum +")")
+                  | Reject
         if success
          .alert.alert-success
            | Successfully Updated!   
