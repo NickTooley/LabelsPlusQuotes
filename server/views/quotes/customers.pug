@@ -38,12 +38,36 @@ block content
                 }
               each quote in quotes
                 tr.clickable-row(data-href=`/quotes/edit/${quote.quoteNum}`)
-                  td
+                  td(style="vertical-align:middle")
                     | #{quote.quoteNum}
-                  td
+                  td(style="vertical-align:middle")
                     | #{quote.title}
-                  td
-                  td
+                  td(style="vertical-align:middle; padding-bottom:10px;")
+                    if quote.status == "Pending"
+                      .label.label-warning(id=quote.quoteNum + "label")
+                        | Pending
+                    if quote.status == "Approved"
+                      .label.label-success(id=quote.quoteNum + "label")
+                        | Approved
+                    if quote.status == "Rejected"
+                      .label.label-danger(id=quote.quoteNum + "label")
+                        | Rejected
+                  td(style="vertical-align:middle;")
+                    if quote.status == "Pending"
+                      button.btn.btn-success(type="button", id=quote.quoteNum+"approve" style="padding:3px 10px;" onclick="approveAJAX(event, "+ quote.quoteNum +")")
+                        span.lnr.lnr-checkmark-circle
+                      button.btn.btn-danger(type="button", id=quote.quoteNum+"reject" style="padding:3px 10px;" onclick="rejectAJAX(event, "+ quote.quoteNum +")")
+                        span.lnr.lnr-cross-circle
+                    if quote.status == "Approved"
+                      button.btn.btn-success(type="button", id=quote.quoteNum+"approve" style="padding:3px 10px;" disabled)
+                        span.lnr.lnr-checkmark-circle
+                      button.btn.btn-danger(type="button", id=quote.quoteNum+"reject" style="padding:3px 10px;"  onclick="rejectAJAX(event, "+ quote.quoteNum +")")
+                        span.lnr.lnr-cross-circle                  
+                    if quote.status == "Rejected"
+                      button.btn.btn-success(type="button", id=quote.quoteNum+"approve" style="padding:3px 10px;" onclick="approveAJAX(event, "+ quote.quoteNum +")")
+                        span.lnr.lnr-checkmark-circle
+                      button.btn.btn-danger(type="button", id=quote.quoteNum+"reject" style="padding:3px 10px;" disabled)
+                        span.lnr.lnr-cross-circle                  
         .panel-footer
           .row
 
@@ -75,8 +99,49 @@ block additionalscripts
     jQuery(document).ready(function($) {
       $(".clickable-row").click(function() {
           window.location = $(this).data("href");
+          //- console.log("We Moving");
       });
     });
+  
+  script.
+    function approveAJAX(ev, e){
+      //- window.location = "/quotes/approve/"+e;
+      $.ajax({
+        type: "POST",
+        url: "/quotes/approve/"+e,
+        data: {"id":e},
+        success: function(data){
+          if(data=="Approved"){
+            $('#'+e+'label').removeClass('label-warning label-danger').addClass('label-success').text("Approved")
+            $('#'+e+'approve').attr('disabled', true)
+            $('#'+e+'reject').attr('disabled', false)
+          }
+        }
+      });
+
+      ev.stopPropagation();
+
+    }
+
+    function rejectAJAX(ev, e){
+      console.log(e);
+      //- window.location = "/quotes/reject/"+e;
+       $.ajax({
+        type: "POST",
+        url: "/quotes/reject/"+e,
+        data: {"id":e},
+        success: function(data){
+          console.log(data);
+          if(data=="Rejected"){
+            $('#'+e+'label').removeClass('label-warning label-success').addClass('label-danger').text("Rejected")
+            $('#'+e+'approve').attr('disabled', false)
+            $('#'+e+'reject').attr('disabled', true)
+          }
+        }
+      });
+
+      ev.stopPropagation();
+    }
 
 
 

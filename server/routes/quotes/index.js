@@ -31,9 +31,57 @@ module.exports = (params) => {
     router.get('/edit/:id', async (req, res, next) => {
         const quote = await QuoteModel.findOne({quoteNum: req.params.id});
 
-        if(!quote) return next();
+        const customers = await CustomerModel.find();
+        const toPass = [];
+        customers.forEach(element => {
+            toPass.push({"label":element.customerName, "addr1":element.addressLine1, "addr2":element.addressLine2, "addr3":element.addressLine3});
+        });
+        const customersJSON = JSON.stringify(toPass);
 
-        res.render('quotes/edit', {quote:quote});
+        if(!quote) return next();
+        console.log(quote.quantity1);
+        if(quote.quantity1 == "undefined" || typeof quote.quantity1 == "undefined"){
+            res.render('quotes/newedit', {quote:quote, customers: customersJSON});
+        }else{
+            res.render('quotes/edit', {quote:quote, customers: customersJSON});
+        }
+        
+    })
+
+    router.post('/approve/:id', async (req, res, next) => {
+        try{
+            const quote = await QuoteModel.findOne({quoteNum: req.params.id})
+
+            quote.status = "Approved";
+
+            const savedquote = await quote.save();
+            if(!savedquote){
+                return done(null, false, {message: "Invalid data"});
+            }
+
+            res.send("Approved");
+        }catch{
+            res.send("Failed to Approve");
+        }
+        
+    })
+
+    router.post('/reject/:id', async (req, res, next) => {
+        try{
+            const quote = await QuoteModel.findOne({quoteNum: req.params.id})
+
+            quote.status = "Rejected";
+
+            const savedquote = await quote.save();
+            if(!savedquote){
+                return done(null, false, {message: "Invalid data"});
+            }
+
+            res.send("Rejected");
+        }catch{
+            res.send("Failed to Reject");
+        }
+        
     })
 
     router.get('/generate/:id', async (req, res, next) => {
@@ -77,11 +125,11 @@ module.exports = (params) => {
             }
         }
 
-        const pdfDoc = new HummusRecipe('template.pdf', 'output.pdf');
+        const pdfDoc = new HummusRecipe('template2.pdf', 'output.pdf');
             pdfDoc
                 // edit 1st page
                 .editPage(1)
-                .text(savedquote.date.toLocaleDateString('en-NZ'), 430, 154, {
+                .text(savedquote.date.toLocaleDateString('en-GB'), 430, 154, {
                     color: '000000',
                     fontSize: 12
                 })
@@ -199,73 +247,98 @@ module.exports = (params) => {
                 }
 
                 if(savedquote.oneoffcost != ""){
-                    pdfDoc.text(savedquote.oneoffcost, 185, 554, {
+                    pdfDoc.text(savedquote.oneoffcost, 185, 582, {
                         color: '000000',
                         fontSize: 12
                     });
                 }
 
-                if(savedquote.quantity1 != ""){
-                    pdfDoc.text(savedquote.quantity1, 36, 497, {
-                        color: '000000',
-                        fontSize: 12
-                    })
-                }
+                console.log(savedquote.quantities.length);
 
-                if(savedquote.quantity2 != ""){
-                    pdfDoc.text(savedquote.quantity2, 36, 511, {
-                        color: '000000',
-                        fontSize: 12
-                    })
-                }
+                if(savedquote.quantities != 0){
+                    for(i=0;i<savedquote.quantities.length;i++){
+                        height = 497 + (14 * i);
 
-                if(savedquote.quantity3 != ""){
-                    pdfDoc.text(savedquote.quantity3, 36, 525, {
-                        color: '000000',
-                        fontSize: 12
-                    })
-                }
+                        pdfDoc.text(savedquote.quantities[i], 36, height, {
+                            color: '000000',
+                            fontSize: 12
+                        })
 
-                if(savedquote.price1 != ""){
-                    pdfDoc.text("$" + savedquote.price1, 180, 497, {
-                        color: '000000',
-                        fontSize: 12
-                    })
-                }
+                        pdfDoc.text("$" + savedquote.prices[i], 180, height, {
+                            color: '000000',
+                            fontSize: 12
+                        })
 
-                if(savedquote.price2 != ""){
-                    pdfDoc.text("$" + savedquote.price2, 180, 511, {
-                        color: '000000',
-                        fontSize: 12
-                    })
-                }
+                        pdfDoc.text("$" + savedquote.totals[i], 324, height, {
+                                color: '000000',
+                                fontSize: 12
+                        })
+                        
+                    }
+                }else if(savedquote.quantity1 != "undefined" && typeof savedquote.quantity1 != "undefined"){
 
-                if(savedquote.price3 != ""){
-                    pdfDoc.text("$" + savedquote.price3, 180, 525, {
-                        color: '000000',
-                        fontSize: 12
-                    })
-                }
+                    if(savedquote.quantity1 != ""){
+                        pdfDoc.text(savedquote.quantity1, 36, 497, {
+                            color: '000000',
+                            fontSize: 12
+                        })
+                    }
 
-                if(savedquote.total1 != ""){
-                    pdfDoc.text("$" + savedquote.total1, 324, 497, {
-                        color: '000000',
-                        fontSize: 12
-                    })
-                }
+                    if(savedquote.quantity2 != ""){
+                        pdfDoc.text(savedquote.quantity2, 36, 511, {
+                            color: '000000',
+                            fontSize: 12
+                        })
+                    }
 
-                if(savedquote.total2 != ""){
-                    pdfDoc.text("$" + savedquote.total2, 324, 511, {
-                        color: '000000',
-                        fontSize: 12
-                    })
-                }
+                    if(savedquote.quantity3 != ""){
+                        pdfDoc.text(savedquote.quantity3, 36, 525, {
+                            color: '000000',
+                            fontSize: 12
+                        })
+                    }
 
-                if(savedquote.total3 != ""){
-                    pdfDoc.text("$" + savedquote.total3, 324, 525, {
-                        color: '000000',
-                        fontSize: 12
-                    })
+                    if(savedquote.price1 != ""){
+                        pdfDoc.text("$" + savedquote.price1, 180, 497, {
+                            color: '000000',
+                            fontSize: 12
+                        })
+                    }
+
+                    if(savedquote.price2 != ""){
+                        pdfDoc.text("$" + savedquote.price2, 180, 511, {
+                            color: '000000',
+                            fontSize: 12
+                        })
+                    }
+
+                    if(savedquote.price3 != ""){
+                        pdfDoc.text("$" + savedquote.price3, 180, 525, {
+                            color: '000000',
+                            fontSize: 12
+                        })
+                    }
+
+                    if(savedquote.total1 != ""){
+                        pdfDoc.text("$" + savedquote.total1, 324, 497, {
+                            color: '000000',
+                            fontSize: 12
+                        })
+                    }
+
+                    if(savedquote.total2 != ""){
+                        pdfDoc.text("$" + savedquote.total2, 324, 511, {
+                            color: '000000',
+                            fontSize: 12
+                        })
+                    }
+
+                    if(savedquote.total3 != ""){
+                        pdfDoc.text("$" + savedquote.total3, 324, 525, {
+                            color: '000000',
+                            fontSize: 12
+                        })
+                    }
                 }
 
                 pdfDoc
@@ -345,6 +418,7 @@ module.exports = (params) => {
 
         const quote = await QuoteModel.findOne({quoteNum: req.params.id});
         
+        quote.quoteNum = req.params.id;
         quote.customername = req.body.customername;
         quote.addressLine1 = req.body.addressLine1;
         quote.addressLine2 = req.body.addressLine2;
@@ -368,6 +442,9 @@ module.exports = (params) => {
         quote.total1 = req.body.total1;
         quote.total2 = req.body.total2;
         quote.total3 = req.body.total3;
+        quote.quantities = req.body.quantities,
+        quote.prices = req.body.prices,
+        quote.totals = req.body.totals,
         quote.oneoffcost = req.body.oneoffcost;
         quote.createdby = req.user.username;
 
@@ -447,6 +524,36 @@ module.exports = (params) => {
 
 
 
+        // Old Quote Entry
+        // const newquote = new QuoteModel({
+        //     customername: req.body.customername,
+        //     addressLine1: req.body.addressLine1,
+        //     addressLine2: req.body.addressLine2,
+        //     addressLine3: req.body.addressLine3,
+        //     attention: req.body.attention,
+        //     title: req.body.title,
+        //     stock: req.body.stock,
+        //     adhesive: req.body.adhesive,
+        //     backing: req.body.backing,
+        //     presentation: req.body.presentation,
+        //     coresize: req.body.coresize,
+        //     diesize: req.body.diesize,
+        //     numcolors: req.body.numcolors,
+        //     additionaldetails: req.body.additionaldetails,
+        //     quantity1: req.body.quantity1,
+        //     quantity2: req.body.quantity2,
+        //     quantity3: req.body.quantity3,
+        //     price1: req.body.price1,
+        //     price2: req.body.price2,
+        //     price3: req.body.price3,
+        //     total1: req.body.total1,
+        //     total2: req.body.total2,
+        //     total3: req.body.total3,
+        //     oneoffcost: req.body.oneoffcost,
+        //     createdby: req.user.username,
+        // });
+
+
         //Quote Entry
         const newquote = new QuoteModel({
             customername: req.body.customername,
@@ -463,15 +570,9 @@ module.exports = (params) => {
             diesize: req.body.diesize,
             numcolors: req.body.numcolors,
             additionaldetails: req.body.additionaldetails,
-            quantity1: req.body.quantity1,
-            quantity2: req.body.quantity2,
-            quantity3: req.body.quantity3,
-            price1: req.body.price1,
-            price2: req.body.price2,
-            price3: req.body.price3,
-            total1: req.body.total1,
-            total2: req.body.total2,
-            total3: req.body.total3,
+            quantities: req.body.quantities,
+            prices: req.body.prices,
+            totals: req.body.totals,
             oneoffcost: req.body.oneoffcost,
             createdby: req.user.username,
         });

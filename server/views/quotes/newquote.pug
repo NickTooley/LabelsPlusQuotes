@@ -57,40 +57,44 @@ block content
                 label(for='numColors') Number of Colours
                 input#numColors.form-control(type='text', name='numcolors', placeholder='Four', required, minlength=2)
 
-              .col-sm-4
-                  .form-group
-                    label(for='quantity1') Quantity
-                    input#quantity1.form-control(type='text', name='quantity1', placeholder='10,000', required, minlength=2)
-              .col-sm-4
-                  .form-group
-                    label(for='price1') Price per Roll (Enter just Dollar Value)
-                    input#price1.form-control(type='text', name='price1', placeholder='126.64', required, minlength=2)
+              //- .col-sm-4
+              //-     .form-group
+              //-       label(for='quantity1') Quantity
+              //-       input#quantity1.form-control(type='text', name='quantity1', placeholder='10,000', required, minlength=2)
+              //- .col-sm-4
+              //-     .form-group
+              //-       label(for='price1') Price per Roll (Enter just Dollar Value)
+              //-       input#price1.form-control(type='text', name='price1', placeholder='126.64', required, minlength=2)
             
-              .col-sm-4
-                  .form-group
-                    label(for='total1') Total Net Price
-                    input#total1.form-control(type='text', name='total1', placeholder='1266.40', required, minlength=2)
+              //- .col-sm-4
+              //-     .form-group
+              //-       label(for='total1') Total Net Price
+              //-       input#total1.form-control(type='text', name='total1', placeholder='1266.40', required, minlength=2)
 
-              .col-sm-4
-                  .form-group
-                    input#quantity2.form-control(type='text', name='quantity2', placeholder='15,000',  minlength=2)
-              .col-sm-4
-                  .form-group
-                    input#price2.form-control(type='text', name='price2', placeholder='109.25',  minlength=2)
-              .col-sm-4
-                  .form-group
-                    input#total2.form-control(type='text', name='total2', placeholder='1638.75',  minlength=2)
+              //- .col-sm-4
+              //-     .form-group
+              //-       input#quantity2.form-control(type='text', name='quantity2', placeholder='15,000',  minlength=2)
+              //- .col-sm-4
+              //-     .form-group
+              //-       input#price2.form-control(type='text', name='price2', placeholder='109.25',  minlength=2)
+              //- .col-sm-4
+              //-     .form-group
+              //-       input#total2.form-control(type='text', name='total2', placeholder='1638.75',  minlength=2)
 
-              .col-sm-4
-                  .form-group
-                    input#quantity3.form-control(type='text', name='quantity3', placeholder='20,000', minlength=2)
-              .col-sm-4
-                  .form-group
-                    input#price3.form-control(type='text', name='price3', placeholder='100.60',  minlength=2)
-              .col-sm-4
-                  .form-group
-                    input#total3.form-control(type='text', name='total3', placeholder='2012.00',  minlength=2)
+              //- .col-sm-4
+              //-     .form-group
+              //-       input#quantity3.form-control(type='text', name='quantity3', placeholder='20,000', minlength=2)
+              //- .col-sm-4
+              //-     .form-group
+              //-       input#price3.form-control(type='text', name='price3', placeholder='100.60',  minlength=2)
+              //- .col-sm-4
+              //-     .form-group
+              //-       input#total3.form-control(type='text', name='total3', placeholder='2012.00',  minlength=2)
 
+              #quantitytable.table-responsive(style="border-radius: 5px;padding: 20px 0px 40px 0px;border: 1px solid #e7e7e7;")
+                table#dynamic_field.table
+                button#add.btn.btn-primary.btn-lg.btn-block(type="button" , name="add", style="width: 600px; margin: auto;") Add New Quantity   
+              br
               .form-group
                 label(for='oneOffCost') One Off Costs
                 input#oneOffCost.form-control(type='text', name='oneoffcost', placeholder='Die 245.00 Total', required, minlength=2)
@@ -133,3 +137,54 @@ block additionalscripts
         }
       }
     });
+
+  script.
+    $(document).ready(function(){  
+      var i= 0;  
+      $('#add').click(function(){  
+        i++;
+        if(i == 1){
+          $('#dynamic_field').append('<tr id="tablehead" style="margin-bottom: -10px;"> ' +
+          '<td colspan="2" style="border-top: 0px;">Quantity</td>'+
+          '<td colspan="2" style="border-top: 0px;">Price Per Roll</td>'+
+          '<td colspan="2" style="border-top: 0px;">Total Net Price</td>'+
+          '</tr>');
+        }
+        if(i <= 5){
+        $('#dynamic_field').append('<tr id="row'+i+'"> ' +
+          '<td colspan="2" style="border-top:none; vertical-align: middle;">'+
+          '<div class="form-group" style="margin-bottom:10px;margin-top:10px;">'+
+          '<input class="form-control" type="text" name="quantities[]" >'+
+          '</div>'+
+          '</td>'+  
+          '<td colspan="2" style="border-top:none; vertical-align: middle;">'+
+          '<div class="form-group" style="margin-bottom:10px;margin-top:10px;">'+
+          '<input class="form-control" type="text" name="prices[]"  >'+
+          '</div>'+
+          '</td>'+
+          '<td colspan="2" style="border-top:none; vertical-align: middle;">'+
+          '<div class="form-group" style="margin-bottom:10px;margin-top:10px;">'+
+          '<input class="form-control" type="text" name="totals[]"  >'+
+          '</div>'+
+          '</td>'+
+          '<td style="border-top:none; vertical-align: middle;"><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td>' +
+          '</tr>'  );  
+        }
+        if(i==5){
+          $('#add').css("display","none");
+        }
+      });
+      $(document).on('click', '.btn_remove', function(){ 
+        if(i==5){
+          $('#add').css("display","block");
+        } 
+        var button_id = $(this).attr("id");   
+        $('#row'+button_id+'').remove(); 
+        i--; 
+
+        if(i==0){
+          $('#tablehead').remove();
+        }
+      });
+    }); 
+    

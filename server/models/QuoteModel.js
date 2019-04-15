@@ -31,7 +31,7 @@ const quoteSchema = mongoose.Schema({
     },
     date: {
         type: Date,
-        default: moment().tz("Pacific/Auckland").format(),
+        default: new Date(),
         required: true,
     },
     title: {
@@ -83,15 +83,12 @@ const quoteSchema = mongoose.Schema({
     },
     quantity1: {
         type: String,
-        required: true,
     },
     price1: {
         type: String,
-        required: true,
     },
     total1: {
         type: String,
-        required: true,
     },
     quantity2: {
         type: String,
@@ -110,6 +107,15 @@ const quoteSchema = mongoose.Schema({
     },
     total3: {
         type: String,
+    },
+    quantities: {
+        type: [String],
+    },
+    prices: {
+        type: [String],
+    },
+    totals: {
+        type: [String],
     },
     oneoffcost: {
         type: String,
@@ -133,5 +139,17 @@ const quoteSchema = mongoose.Schema({
 
 quoteSchema.plugin(AutoIncrement, {inc_field: 'quoteNum', startAt: 100000});
 
+quoteSchema.pre('save', async function preSave(next){
+    const quote = this;
+    if(!quote.isModified()) return next();
+    try{
+        const date = new Date();
+        date.setHours(date.getHours() - 13);
+        quote.date = date;
+        return next();
+    } catch(err){
+        return next(err);
+    }
+});
 
 module.exports = mongoose.model('quote', quoteSchema);

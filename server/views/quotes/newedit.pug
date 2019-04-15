@@ -1,0 +1,277 @@
+extends ../layout/index
+
+block content      
+  .container#registration
+    .row
+      .col-sm-10
+        .row
+          .col-sm-8(style=" margin-right:-35px;")
+              h1 Editing Quote #{quote.quoteNum} &nbsp;
+                if quote.status == "Pending"
+                  .label.label-warning(id=quote.quoteNum + "label" style="font-size:12px; vertical-align: middle;")
+                    | Pending
+                if quote.status == "Approved"
+                  .label.label-success(id=quote.quoteNum + "label" style="font-size:12px; vertical-align: middle;")
+                    | Approved
+                if quote.status == "Rejected"
+                  .label.label-danger(id=quote.quoteNum + "label" style="font-size:12px; vertical-align: middle;")
+                    | Rejected
+          .col-sm-2(style=" margin-right:-10px;")
+              a.btn.btn-primary(href=`/quotes/generate/${quote.quoteNum}`, role="button" style="margin-top:20px;")
+                  | Download PDF
+          .col-sm-1(style=" margin-right:10px;")
+            if quote.status == "Approved"
+              a.btn.btn-success(href='#', role="button", style="margin-top:20px;" disabled)
+                  | Accept
+            else
+               a.btn.btn-success(href='#', role="button", style="margin-top:20px;" onclick="approveAJAX("+quote.quoteNum +")")
+                  | Accept
+          .col-sm-1
+            if quote.status == "Rejected"
+              a.btn.btn-danger(href='#', role="button", style="margin-top:20px;" disabled)
+                  | Reject
+            else
+              a.btn.btn-danger(href='#', role="button", style="margin-top:20px;" onclick="rejectAJAX("+ quote.quoteNum +")")
+                  | Reject
+        if success
+         .alert.alert-success
+           | Successfully Updated!   
+        .panel.panel-default
+          .panel-body
+            form(method="POST", autocomplete="off", action=`/quotes/edit/${quote.quoteNum}`, target="_blank")
+              input(autocomplete="false" name="hidden" value=`${quote.quoteNum}` type="text" style="display:none;")
+              .form-group
+                label(for='inputCustomer') Customer
+                input#inputCustomer.form-control(type='text', value=`${quote.customername}` name='customername', aria-describedby='customerHelp', placeholder='Enter customer', required, minlength=2)
+
+              .form-group
+                label(for='inputAddr1') Address
+                input#inputAddr1.form-control(type='text', value=`${quote.addressLine1}`, maxlength="50", name='addressLine1', aria-describedby='addrHelp', placeholder='Enter Address Line 1')
+                input#inputAddr2.form-control(type='text', value=`${quote.addressLine2}`, maxlength="50", name='addressLine2', aria-describedby='addrHelp', placeholder='Enter Address Line 2')
+                input#inputAddr3.form-control(type='text', value=`${quote.addressLine3}`, maxlength="50", name='addressLine3', aria-describedby='addrHelp', placeholder='Enter Address Line 3')
+                input#Attention.form-control(type='text', value=`${quote.attention}`, maxlength="50", name='attention', aria-describedby='addrHelp', placeholder='Attn: ******')
+
+              .form-group
+                label(for='inputTitle') Quote Title
+                input#inputTitle.form-control(type='text', value=`${quote.title}`, name='title', placeholder='Title', required, minlength=2)
+
+              .form-group
+                label(for='inputStock') Stock
+                input#inputStock.form-control(type='text', value=`${quote.stock}`,name='stock', placeholder='Gloss White PP', required, minlength=2)
+
+              .form-group
+                label(for='inputAdhesive') Adhesive
+                input#inputAdhesive.form-control(type='text', value=`${quote.adhesive}`,name='adhesive', placeholder='Permanent', required, minlength=2)
+
+              .form-group
+                label(for='inputBacking') Backing
+                input#inputBacking.form-control(type='text', value=`${quote.backing}`,name='backing', placeholder='Glassine', required, minlength=2)
+
+              .form-group
+                label(for='inputPresentation') Presentation
+                input#inputPresentation.form-control(type='text', value=`${quote.presentation}`,name='presentation', placeholder='Number per Roll', required, minlength=2)
+                small#customerHelp.form-text.text-muted Enter only the number per roll.
+
+              .form-group
+                label(for='inputCoreSize') Core Size
+                input#inputCoreSize.form-control(type='text', value=`${quote.coresize}`,name='coresize', placeholder='Size in mm', required, minlength=2)
+                small#customerHelp.form-text.text-muted Enter only the number of mm.
+
+              .form-group
+                label(for='dieSize') Die Size
+                input#dieSize.form-control(type='text', value=`${quote.diesize}`, name='diesize', placeholder='65.00mm Width x 130.00mm Length Rectangle', required, minlength=2)
+
+              .form-group
+                label(for='numColors') Number of Colours
+                input#numColors.form-control(type='text', value=`${quote.numcolors}`,name='numcolors', placeholder='Four', required, minlength=2)
+
+              //- .col-sm-4
+              //-     .form-group
+              //-       label(for='quantity1') Quantity
+              //-       input#quantity1.form-control(type='text',value=`${quote.quantity1}`, name='quantity1', placeholder='10,000', required, minlength=2)
+              //- .col-sm-4
+              //-     .form-group
+              //-       label(for='numColors') Price per Roll (Enter just Dollar Value)
+              //-       input#price1.form-control(type='text', value=`${quote.price1}`,name='price1', placeholder='126.64', required, minlength=2)
+            
+              //- .col-sm-4
+              //-     .form-group
+              //-       label(for='numColors') Total Net Price
+              //-       input#total1.form-control(type='text', value=`${quote.total1}`,name='total1', placeholder='1266.40', required, minlength=2)
+
+              //- .col-sm-4
+              //-     .form-group
+              //-       input#quantity2.form-control(type='text', value=`${quote.quantity2}`, name='quantity2', placeholder='15,000', minlength=2)
+              //- .col-sm-4
+              //-     .form-group
+              //-       input#price2.form-control(type='text', value=`${quote.price2}`,name='price2', placeholder='109.25', minlength=2)
+              //- .col-sm-4
+              //-     .form-group
+              //-       input#total2.form-control(type='text', value=`${quote.total2}`,name='total2', placeholder='1638.75', minlength=2)
+
+              //- .col-sm-4
+              //-     .form-group
+              //-       input#quantity3.form-control(type='text', value=`${quote.quantity3}`, name='quantity3', placeholder='20,000', minlength=2)
+              //- .col-sm-4
+              //-     .form-group
+              //-       input#price3.form-control(type='text', value=`${quote.price3}`,name='price3', placeholder='100.60', minlength=2)
+              //- .col-sm-4
+              //-     .form-group
+              //-       input#total3.form-control(type='text', value=`${quote.total3}`, name='total3', placeholder='2012.00', minlength=2)
+
+              #quantitytable.table-responsive(style="border-radius: 5px;padding: 20px 0px 40px 0px;border: 1px solid #e7e7e7;")
+                table#dynamic_field.table
+                  - var n = 0;
+                  while n < quote.quantities.length
+                    if n == 0
+                      tr#tablehead(style="margin-bottom: -10px;")
+                        td(colspan="2" style="border-top: 0px;") Quantity
+                        td(colspan="2" style="border-top: 0px;") Price Per Roll
+                        td(colspan="2" style="border-top: 0px;") Total Net Price
+                    tr.quantityrow(id="row" + (n + 1))
+                      td(colspan="2" style="border-top:none; vertical-align: middle;")
+                        .form-group( style="margin-bottom:10px;margin-top:10px;")
+                          input.form-control(type="text" name="quantities[]" value=quote.quantities[n])
+                      td(colspan="2" style="border-top:none; vertical-align: middle;")
+                        .form-group( style="margin-bottom:10px;margin-top:10px;")
+                          input.form-control(type="text" name="prices[]" value=quote.prices[n] )
+                      td(colspan="2" style="border-top:none; vertical-align: middle;")
+                        .form-group( style="margin-bottom:10px;margin-top:10px;")
+                          input.form-control(type="text" name="totals[]" value=quote.totals[n])
+                      td(style="border-top:none; vertical-align: middle;", id=n+1)
+                        button.btn.btn-danger.btn_remove(type="button" name="remove" id=n + 1) X
+                      - n++
+                      
+
+
+                button#add.btn.btn-primary.btn-lg.btn-block(type="button" , name="add", style="width: 600px; margin: auto;") Add New Quantity   
+              br
+
+              .form-group
+                label(for='oneOffCost') One Off Costs
+                input#oneOffCost.form-control(type='text', value=`${quote.oneoffcost}`,name='oneoffcost', placeholder='Die 245.00 Total', required, minlength=2)
+
+              .form-group
+                label(for='inputAddr1') Additional Information
+                textarea.form-control(name="additionaldetails" , value=`${quote.additionaldetails}`,rows="4", cols="50" maxlength="150")
+
+              button.btn.btn-primary(type='submit') Save
+
+block additionalscripts
+  script.
+    var mySource = !{customers};
+
+    $("#inputCustomer").autocomplete({
+      source: mySource,
+      select: function(event, ui){
+        if(ui.item){
+          $("#inputAddr1").val(ui.item.addr1);
+          $("#inputAddr2").val(ui.item.addr2);
+          $("#inputAddr3").val(ui.item.addr3);
+          return ui.item.label;
+        }
+        else{
+          $("#inputAddr1").val("");
+          $("#inputAddr2").val("");
+          $("#inputAddr3").val("");
+        }
+      },
+      change: function(event, ui){
+        if(ui.item){
+          $("#inputAddr1").val(ui.item.addr1);
+          $("#inputAddr2").val(ui.item.addr2);
+          $("#inputAddr3").val(ui.item.addr3);
+        }
+        else{
+          $("#inputAddr1").val("");
+          $("#inputAddr2").val("");
+          $("#inputAddr3").val("");
+        }
+      }
+    });
+  script.
+    $(document).ready(function(){
+      var tds = $("td");
+      var i = 0
+      if(tds.size() == 0){
+        i = 0;
+      } else{
+        i = tds.last().attr('id');
+      }
+      
+      $('#add').click(function(){  
+        i++;
+        if(i == 1){
+          $('#dynamic_field').append('<tr id="tablehead" style="margin-bottom: -10px;"> ' +
+          '<td colspan="2" style="border-top: 0px;">Quantity</td>'+
+          '<td colspan="2" style="border-top: 0px;">Price Per Roll</td>'+
+          '<td colspan="2" style="border-top: 0px;">Total Net Price</td>'+
+          '</tr>');
+        }
+        if(i <= 5){
+        $('#dynamic_field').append('<tr id="row'+i+'"> ' +
+          '<td colspan="2" style="border-top:none; vertical-align: middle;">'+
+          '<div class="form-group" style="margin-bottom:10px;margin-top:10px;">'+
+          '<input class="form-control" type="text" name="quantities[]" >'+
+          '</div>'+
+          '</td>'+  
+          '<td colspan="2" style="border-top:none; vertical-align: middle;">'+
+          '<div class="form-group" style="margin-bottom:10px;margin-top:10px;">'+
+          '<input class="form-control" type="text" name="prices[]"  >'+
+          '</div>'+
+          '</td>'+
+          '<td colspan="2" style="border-top:none; vertical-align: middle;">'+
+          '<div class="form-group" style="margin-bottom:10px;margin-top:10px;">'+
+          '<input class="form-control" type="text" name="totals[]"  >'+
+          '</div>'+
+          '</td>'+
+          '<td style="border-top:none; vertical-align: middle;"><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td>' +
+          '</tr>'  );  
+        }
+        if(i==5){
+          $('#add').css("display","none");
+        }
+      });
+      $(document).on('click', '.btn_remove', function(){ 
+        if(i==5){
+          $('#add').css("display","block");
+        } 
+        var button_id = $(this).attr("id");   
+        $('#row'+button_id+'').remove(); 
+        i--; 
+
+        if(i==0){
+          $('#tablehead').remove();
+        }
+      });
+    }); 
+
+block additionalscripts
+  script.
+    function approveAJAX(e){
+      $.ajax({
+        type: "POST",
+        url: "/quotes/approve/"+e,
+        data: {"id":e},
+        success: function(data){
+          if(data=="Approved"){
+            location.reload();
+          }
+        }
+      });
+
+    }
+
+    function rejectAJAX(e){
+        $.ajax({
+        type: "POST",
+        url: "/quotes/reject/"+e,
+        data: {"id":e},
+        success: function(data){
+          console.log(data);
+          if(data=="Rejected"){
+            location.reload();
+          }
+        }
+      });
+    }
